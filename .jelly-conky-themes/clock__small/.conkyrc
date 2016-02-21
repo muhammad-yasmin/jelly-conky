@@ -1,0 +1,86 @@
+#====================================
+#   Conky Settings
+#====================================
+background yes
+update_interval 1
+double_buffer yes
+no_buffers yes
+
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+
+#====================================
+#   Window Specifications
+#====================================
+gap_x 0
+gap_y 0
+alignment bottom_left
+
+minimum_size 280 100
+maximum_width 400
+
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_colour 000000
+own_window_hints undecorate,sticky,skip_taskbar,skip_pager,below
+
+own_window_argb_visual yes
+own_window_argb_value 255
+
+
+#====================================
+#   Text Settings
+#====================================
+use_xft yes
+xftalpha 0
+xftfont sans serif:size=10
+override_utf8_locale yes
+imlib_cache_size 0
+
+
+#====================================
+#   Color Scheme
+#====================================
+default_color FFFFFF
+
+color0 FFFFFF   # hours
+color1 FFFFFF   # clock dots
+color2 FFFFFF   # minutes
+color3 FFFFFF   # week day
+color4 FFFFFF   # month day
+color5 FFFFFF   # month
+
+
+#====================================
+#   Locale (e.g. "es_ES.UTF-8")
+#   Leave empty for default
+#====================================
+template9 ""
+
+
+###################################################
+###################################################
+
+
+TEXT
+#----------------------------------------
+#   Clock
+#----------------------------------------
+#
+# Hours
+#
+${font Roboto :size=42}${color0}\
+${alignc}${time %H}\
+#
+# Clock separator
+#
+${font Roboto Thin :size=42}${color1}:\
+#
+# Minutes
+#
+${font Roboto Thin :size=42}${color2}\
+${time %M}${font}${color}

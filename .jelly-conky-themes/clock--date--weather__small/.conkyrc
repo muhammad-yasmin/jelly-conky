@@ -1,0 +1,177 @@
+#====================================
+#   Conky Settings
+#====================================
+background yes
+update_interval 1
+double_buffer yes
+no_buffers yes
+
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+
+#====================================
+#   Window Specifications
+#====================================
+gap_x 0
+gap_y 0
+alignment bottom_left
+
+minimum_size 200 200
+maximum_width 400
+
+own_window yes
+own_window_type normal
+own_window_transparent yes
+own_window_colour 000000
+own_window_hints undecorate,sticky,skip_taskbar,skip_pager,below
+
+own_window_argb_visual yes
+own_window_argb_value 255
+
+
+#====================================
+#   Text Settings
+#====================================
+use_xft yes
+xftalpha 0
+xftfont sans serif:size=10
+override_utf8_locale yes
+imlib_cache_size 0
+
+
+#====================================
+#   Color Scheme
+#====================================
+default_color FFFFFF
+
+color0 FFFFFF   # hours
+color1 FFFFFF   # clock dots
+color2 FFFFFF   # minutes
+color3 FFFFFF   # week day
+color4 FFFFFF   # month day
+color5 FFFFFF   # month
+color6 FFFFFF   # current temp
+color7 FFFFFF   # min temp
+color8 FFFFFF   # max temp
+color9 FFFFFF   # current conditions
+
+
+#====================================
+#   Icon Sources
+#====================================
+template0 ~/.jelly-conky-icons/\#fff__32
+
+
+#====================================
+#   API Key
+#====================================
+template6 ""
+
+
+#====================================
+#   City ID
+#====================================
+template7 ""
+
+
+#====================================
+#   Temp Unit (default, metric, imperial)
+#====================================
+template8 metric
+
+
+#====================================
+#   Locale (e.g. "es_ES.UTF-8")
+#   Leave empty for default
+#====================================
+template9 ""
+
+
+###################################################
+###################################################
+
+
+TEXT
+#----------------------------------------
+#   Fetch Data
+#----------------------------------------
+#
+${execi 300 l=${template9}; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/forecast/daily?APPID=${template6}&id=${template7}&cnt=5&units=${template8}&lang=$l" -o ~/.cache/forecast.json}\
+${execi 300 l=${template9}; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/weather?APPID=${template6}&id=${template7}&cnt=5&units=${template8}&lang=$l" -o ~/.cache/weather.json}\
+#
+#
+#----------------------------------------
+#   Clock
+#----------------------------------------
+#
+# Hours
+#
+${font Roboto :size=42}${color0}\
+${alignc}${time %H}\
+#
+# Clock separator
+#
+${font Roboto Thin :size=42}${color1}:\
+#
+# Minutes
+#
+${font Roboto Thin :size=42}${color2}\
+${time %M}${font}${color}
+#
+#
+#----------------------------------------
+#   Date
+#----------------------------------------
+#
+# Day of the week
+#
+${font Roboto Light :size=12}${color3}\
+${voffset 12}${alignc}${execi 300 LANG=${template9} LC_TIME=${template9} date +"%A"}${color}, \
+#
+# Month day
+#
+${font Roboto :size=12}${color4}\
+${alignc}${execi 300 LANG=${template9} LC_TIME=${template9} date +"%d"}${color} \
+#
+# Month
+#
+${font Roboto Light :size=12}${color5}\
+${alignc}${execi 300 LANG=${template9} LC_TIME=${template9} date +"%B"}${font}${color}
+#
+#
+#----------------------------------------
+#   Current Temp
+#----------------------------------------
+#
+${font Roboto Light :size=22}${color6}\
+${goto 40}${voffset 18}\
+${execi 300 jq ".main.temp" ~/.cache/weather.json | awk '{print int($1+0.5)}' # round num}°${font}${color}
+#
+#
+#----------------------------------------
+#   Min/Max Temps
+#----------------------------------------
+#
+${font Roboto Light :size=10}\
+${goto 40}${voffset 5}\
+${color7}${execi 300 jq ".list[0].temp.min" ~/.cache/forecast.json | awk '{print int($1+0.5)}' # round num}° ${color}| \
+${color8}${execi 300 jq ".list[0].temp.max" ~/.cache/forecast.json | awk '{print int($1+0.5)}' # round num}°${font}${color}
+#
+#
+#----------------------------------------
+#   Current weather
+#----------------------------------------
+#
+${font Roboto Light :size=10}${color9}\
+${goto 40}${voffset 5}\
+${execi 300 jq -r ".weather[0].description" ~/.cache/weather.json}${font}${color}
+#
+#
+#----------------------------------------
+#   Weather icon (current weather)
+#----------------------------------------
+#
+${execi 300 cp -f ${template0}/$(jq .weather[0].id ~/.cache/weather.json).png ~/.cache/current.png}${image ~/.cache/current.png -p 128,114 -s 32x32}\
