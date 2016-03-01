@@ -62,7 +62,7 @@ Edit the `template8` variable inside the `.conkyrc` file to change the units.
 
 * Edit the `color` variables inside the `.conkyrc` file to change **text** color.
 
-* To change the **icon** colors, first use the `render-pngs.sh` script to render a folder of icons with the desired color, then change the icon sources in the `.conkyrc` file under the `Icon Sources` section.
+* To change the **icon** colors, first use the `render-pngs` script to render a folder of icons with the desired color, then change the icon sources in the `.conkyrc` file under the `Icon Sources` section.
     * The script uses the `SVG` folder to render png's.
 
     * You should keep the size at **32(px)** for this conky.
